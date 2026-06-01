@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal Container</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css" />
+  <script defer src="../node_modules/@xterm/xterm/lib/xterm.js"></script>
+  <script defer src="../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+  <script defer src="../node_modules/@xterm/addon-web-links/lib/addon-web-links.js"></script>
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <header class="sidebar-header">
+        <div class="brand">Terminals</div>
+        <button id="new-session-btn" title="New terminal">+</button>
+      </header>
+      <div class="sidebar-search">
+        <input id="session-filter" type="text" placeholder="Search sessions" />
+      </div>
+      <ul id="session-list">
+        <!-- renderer injects .session-item rows here; the rows below are static templates -->
+        <li class="session-item is-template is-active" data-id="template-1">
+          <span class="session-status" data-state="running"></span>
+          <span class="session-icon">›_</span>
+          <div class="session-meta">
+            <div class="session-title">zsh — myproject</div>
+            <div class="session-subtitle">~/code/myproject</div>
+          </div>
+          <button class="session-close" title="Close">×</button>
+        </li>
+        <li class="session-item is-template" data-id="template-2">
+          <span class="session-status" data-state="idle"></span>
+          <span class="session-icon">›_</span>
+          <div class="session-meta">
+            <div class="session-title">bash — notes</div>
+            <div class="session-subtitle">~/documents/notes</div>
+          </div>
+          <button class="session-close" title="Close">×</button>
+        </li>
+      </ul>
+      <footer class="sidebar-footer">
+        <span id="session-count">0 sessions</span>
+        <button id="theme-toggle" class="btn-ghost" title="Choose theme" aria-label="Choose theme" aria-haspopup="menu" aria-expanded="false"></button>
+      </footer>
+    </aside>
+
+    <main id="main">
+      <div class="topbar">
+        <span id="active-title">No terminal</span>
+        <div class="topbar-actions">
+          <button id="layout-toggle" class="btn-ghost" title="Toggle window (grid) mode">▦ Grid</button>
+          <button id="kill-active" class="btn-ghost" title="Close terminal">Close</button>
+        </div>
+      </div>
+      <div id="terminals"><!-- renderer mounts one .term-instance per session here --></div>
+      <div id="empty-state">No terminals yet. Press + to start one.</div>
+    </main>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

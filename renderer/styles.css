@@ -1,0 +1,862 @@
+/* ============================================================================
+   Cozy theme system — one warm "Claude" clay accent across every theme.
+   Default :root = "Pure White" (also the Auto/light fallback). Explicit themes
+   are pinned via :root[data-theme="<id>"] from the footer theme picker; with no
+   explicit choice the @media block below follows the OS (light <-> warm dark).
+   ============================================================================ */
+:root {
+  --bg:            #ffffff;   /* main content background */
+  --bg-sidebar:    #fcfbf9;   /* sidebar panel background (faint warm) */
+  --bg-elevated:   #ffffff;
+  --bg-hover:      #f5f2ec;   /* row hover (warm) */
+  --accent-soft:   #fbeae0;   /* active row tint (clay wash) */
+  --text:          #1c1917;   /* primary warm near-black */
+  --text-muted:    #78716c;   /* secondary/subtitles */
+  --border:        #ece8e1;   /* warm dividers / hairlines */
+  --accent:        #d97757;   /* primary clay / terracotta */
+  --accent-hover:  #c2603f;
+  --status-running:#6f9a5e;   /* sage - active */
+  --status-idle:   #b0a99f;   /* warm grey - idle */
+  --status-exited: #cd5c46;   /* terracotta - exited */
+  --danger-soft:   #fbeae6;   /* red-tinted hover bg */
+  /* Buttons — solid warm near-black fill, light text. */
+  --btn-bg:        #1c1917;
+  --btn-fg:        #ffffff;
+  --btn-bg-hover:  #44403c;
+  --btn-radius:    6px;
+  --radius:        8px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, "Cascadia Code", monospace;
+  color-scheme: light;
+}
+
+/* ---- Pure White (explicit) — same as the cozy default ---- */
+:root[data-theme="pure-white"] {
+  --bg:            #ffffff;
+  --bg-sidebar:    #fcfbf9;
+  --bg-elevated:   #ffffff;
+  --bg-hover:      #f5f2ec;
+  --accent-soft:   #fbeae0;
+  --text:          #1c1917;
+  --text-muted:    #78716c;
+  --border:        #ece8e1;
+  --accent:        #d97757;
+  --accent-hover:  #c2603f;
+  --status-running:#6f9a5e;
+  --status-idle:   #b0a99f;
+  --status-exited: #cd5c46;
+  --danger-soft:   #fbeae6;
+  --btn-bg:        #1c1917;
+  --btn-fg:        #ffffff;
+  --btn-bg-hover:  #44403c;
+  color-scheme: light;
+}
+
+/* ---- Silver — cool light metal, warm clay accent ---- */
+:root[data-theme="silver"] {
+  --bg:            #f4f4f5;
+  --bg-sidebar:    #ebebed;
+  --bg-elevated:   #fbfbfc;
+  --bg-hover:      #e6e6e9;
+  --accent-soft:   #f3e2d8;
+  --text:          #2b2b2e;
+  --text-muted:    #6f6f76;
+  --border:        #dddde1;
+  --accent:        #d97757;
+  --accent-hover:  #c2603f;
+  --status-running:#6f9a5e;
+  --status-idle:   #adadb4;
+  --status-exited: #cd5c46;
+  --danger-soft:   #f3ddd6;
+  --btn-bg:        #2b2b2e;
+  --btn-fg:        #f4f4f5;
+  --btn-bg-hover:  #3f3f45;
+  color-scheme: light;
+}
+
+/* ---- Mocha — warm latte, espresso ink ---- */
+:root[data-theme="mocha"] {
+  --bg:            #f1e9e1;
+  --bg-sidebar:    #eaded3;
+  --bg-elevated:   #f7f1ea;
+  --bg-hover:      #e6d8c9;
+  --accent-soft:   #ecd6c5;
+  --text:          #43342a;
+  --text-muted:    #8a7563;
+  --border:        #ddccbb;
+  --accent:        #bf6b43;
+  --accent-hover:  #a3552f;
+  --status-running:#7a8a55;
+  --status-idle:   #ab9a88;
+  --status-exited: #c25c3f;
+  --danger-soft:   #ecd3c6;
+  --btn-bg:        #43342a;
+  --btn-fg:        #f1e9e1;
+  --btn-bg-hover:  #5c4636;
+  color-scheme: light;
+}
+
+/* ---- Pink — soft blush, clay accent ---- */
+:root[data-theme="pink"] {
+  --bg:            #fdf3f4;
+  --bg-sidebar:    #fbe9ec;
+  --bg-elevated:   #fef8f9;
+  --bg-hover:      #f7dee3;
+  --accent-soft:   #f9dde2;
+  --text:          #4a2e34;
+  --text-muted:    #9c7079;
+  --border:        #f1d7dd;
+  --accent:        #d97757;
+  --accent-hover:  #c2603f;
+  --status-running:#7a9a6d;
+  --status-idle:   #c3a7ac;
+  --status-exited: #d05a55;
+  --danger-soft:   #f9dadf;
+  --btn-bg:        #4a2e34;
+  --btn-fg:        #fdf3f4;
+  --btn-bg-hover:  #67424a;
+  color-scheme: light;
+}
+
+/* ---- Claude Cozy — signature cream + clay ---- */
+:root[data-theme="claude-cozy"] {
+  --bg:            #f0eee6;
+  --bg-sidebar:    #e9e6db;
+  --bg-elevated:   #faf9f5;
+  --bg-hover:      #e4e0d3;
+  --accent-soft:   #f1ddd0;
+  --text:          #2e2a23;
+  --text-muted:    #7d7561;
+  --border:        #ddd8c9;
+  --accent:        #d97757;
+  --accent-hover:  #c2603f;
+  --status-running:#6f8f5e;
+  --status-idle:   #aaa18b;
+  --status-exited: #c95f44;
+  --danger-soft:   #f2ddd2;
+  --btn-bg:        #2e2a23;
+  --btn-fg:        #f0eee6;
+  --btn-bg-hover:  #4a4438;
+  color-scheme: light;
+}
+
+/* ---------- Dark theme tokens (cozy / warm) ----------
+   Two warm dark themes share the clay accent:
+   - "dark"      -> warm espresso charcoal
+   - "grey-dark" -> neutral warm grey
+   Auto mode (no data-theme) follows the OS via the @media block below, which
+   reuses the warm "dark" palette so following the system stays cozy too. */
+:root[data-theme="dark"] {
+  --bg:            #1a1613;
+  --bg-sidebar:    #15110e;
+  --bg-elevated:   #241e19;
+  --bg-hover:      #2c251f;
+  --accent-soft:   rgba(217, 119, 87, 0.18);
+  --text:          #ece3d8;
+  --text-muted:    #a89a8a;
+  --border:        #352c24;
+  --accent:        #e08a63;
+  --accent-hover:  #f0a07d;
+  --status-running:#7fae6a;
+  --status-idle:   #a89a8a;
+  --status-exited: #e8765c;
+  --danger-soft:   rgba(232, 118, 92, 0.16);
+  /* Inverted button for dark mode (warm light fill, dark text). */
+  --btn-bg:        #ece3d8;
+  --btn-fg:        #1a1613;
+  --btn-bg-hover:  #ffffff;
+  color-scheme: dark;
+}
+
+/* ---- Grey Dark — neutral warm-grey dark ---- */
+:root[data-theme="grey-dark"] {
+  --bg:            #1f1f1e;
+  --bg-sidebar:    #191918;
+  --bg-elevated:   #2a2a28;
+  --bg-hover:      #323230;
+  --accent-soft:   rgba(217, 119, 87, 0.18);
+  --text:          #e6e3de;
+  --text-muted:    #9b9790;
+  --border:        #38362f;
+  --accent:        #e08a63;
+  --accent-hover:  #f0a07d;
+  --status-running:#7fae6a;
+  --status-idle:   #9b9790;
+  --status-exited: #e8765c;
+  --danger-soft:   rgba(232, 118, 92, 0.16);
+  --btn-bg:        #e6e3de;
+  --btn-fg:        #1f1f1e;
+  --btn-bg-hover:  #ffffff;
+  color-scheme: dark;
+}
+
+/* Auto mode: no pinned theme + OS prefers dark -> warm "dark" palette. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg:            #1a1613;
+    --bg-sidebar:    #15110e;
+    --bg-elevated:   #241e19;
+    --bg-hover:      #2c251f;
+    --accent-soft:   rgba(217, 119, 87, 0.18);
+    --text:          #ece3d8;
+    --text-muted:    #a89a8a;
+    --border:        #352c24;
+    --accent:        #e08a63;
+    --accent-hover:  #f0a07d;
+    --status-running:#7fae6a;
+    --status-idle:   #a89a8a;
+    --status-exited: #e8765c;
+    --danger-soft:   rgba(232, 118, 92, 0.16);
+    --btn-bg:        #ece3d8;
+    --btn-fg:        #1a1613;
+    --btn-bg-hover:  #ffffff;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Text selection — warm clay wash derived from the active theme's accent,
+   replacing the OS default low-contrast blue. (Terminal selection is themed
+   separately via xterm's selectionBackground.) */
+::selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--text);
+}
+::-moz-selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--text);
+}
+
+/* ---------- Layout ---------- */
+#app {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+#sidebar {
+  flex: 0 0 280px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+#main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg);
+  position: relative;
+}
+
+/* ---------- Sidebar header ---------- */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  flex: 0 0 auto;
+}
+
+.brand {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Primary button — solid near-black fill (reference CTA style). */
+#new-session-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--btn-radius);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.06s ease;
+}
+
+#new-session-btn:hover {
+  background: var(--btn-bg-hover);
+}
+
+#new-session-btn:active {
+  transform: translateY(0.5px);
+}
+
+#new-session-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Secondary / ghost buttons — subtle outline (reference's quieter actions). */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--btn-radius);
+  cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* icon-only ghost button (square) */
+.btn-ghost.btn-icon {
+  width: 28px;
+  padding: 0;
+}
+
+/* ghost button toggled "on" (e.g. active layout mode) */
+.btn-ghost.is-on {
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border-color: var(--btn-bg);
+}
+
+.btn-ghost.is-on:hover {
+  background: var(--btn-bg-hover);
+  border-color: var(--btn-bg-hover);
+}
+
+/* ---------- Sidebar search ---------- */
+.sidebar-search {
+  padding: 0 12px 10px;
+  flex: 0 0 auto;
+}
+
+#session-filter {
+  width: 100%;
+  padding: 7px 10px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  caret-color: var(--accent);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+#session-filter::placeholder {
+  color: var(--text-muted);
+}
+
+#session-filter:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ---------- Session list ---------- */
+#session-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 8px;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.session-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 2px;
+  border-radius: var(--radius);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s ease;
+}
+
+.session-item:hover {
+  background: var(--bg-hover);
+}
+
+.session-item.is-active {
+  background: var(--accent-soft);
+  border-left-color: var(--accent);
+}
+
+.session-item.is-active .session-title {
+  font-weight: 600;
+}
+
+/* status dot */
+.session-status {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-idle);
+}
+
+.session-status[data-state="running"] {
+  background: var(--status-running);
+  animation: status-pulse 1.6s ease-in-out infinite;
+}
+
+.session-status[data-state="idle"] {
+  background: var(--status-idle);
+}
+
+.session-status[data-state="exited"] {
+  background: var(--status-exited);
+}
+
+@keyframes status-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(111, 154, 94, 0.45); }
+  70%  { box-shadow: 0 0 0 5px rgba(111, 154, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(111, 154, 94, 0); }
+}
+
+.session-icon {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.session-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.session-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease;
+}
+
+.session-item:hover .session-close {
+  opacity: 1;
+}
+
+.session-close:hover {
+  color: var(--status-exited);
+  background: var(--bg-hover);
+}
+
+.session-close:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ---------- Sidebar footer ---------- */
+.sidebar-footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px 8px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* theme picker button — styled in the "Theme picker" section below */
+
+/* ---------- Topbar ---------- */
+.topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+#active-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.topbar-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* #kill-active uses .btn-ghost; only its destructive hover differs. */
+#kill-active:hover {
+  color: var(--status-exited);
+  border-color: var(--status-exited);
+  background: var(--danger-soft);
+}
+
+/* ---------- Terminals area ---------- */
+#terminals {
+  flex: 1 1 auto;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* A terminal tile = optional header + body (xterm host). */
+.term-instance {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg);
+}
+
+.term-header {
+  display: none; /* hidden in single mode; shown in grid mode */
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 0 0 auto;
+  height: 28px;
+  padding: 0 6px 0 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-sidebar);
+  font-size: 12px;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.term-header-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.term-header-close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.1s ease, background 0.1s ease;
+}
+
+.term-header-close:hover {
+  color: var(--status-exited);
+  background: var(--bg-hover);
+}
+
+.term-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  padding: 8px;
+}
+
+/* ---- Single mode: show only the active tile, no headers ---- */
+#terminals:not(.is-grid) .term-instance:not(.is-active) {
+  display: none;
+}
+
+/* ---- Grid (window) mode: tile every session ---- */
+#terminals.is-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-auto-rows: minmax(220px, 1fr);
+  gap: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-content: stretch;
+}
+
+#terminals.is-grid .term-instance {
+  position: relative;
+  inset: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+#terminals.is-grid .term-instance .term-header {
+  display: flex;
+}
+
+#terminals.is-grid .term-instance.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+#terminals.is-grid .term-instance.is-active .term-header {
+  color: var(--text);
+}
+
+/* ---------- Empty state ---------- */
+#empty-state {
+  position: absolute;
+  inset: 0;
+  top: 49px; /* sit below topbar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* ---------- Scrollbars (thin / subtle) ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+  background-clip: padding-box;
+}
+
+/* ---------- Theme picker ---------- */
+.sidebar-footer {
+  position: relative; /* anchor for the popover */
+}
+
+/* Footer theme picker — a clearly clickable labeled control:
+   [swatch] Theme name [chevron]. Reads as a dropdown trigger, not a stray dot. */
+#theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: auto;          /* override .btn-icon's fixed square */
+  height: 28px;
+  padding: 0 8px 0 7px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.theme-picker-label {
+  flex: 0 1 auto;
+  white-space: nowrap;
+  letter-spacing: -0.005em;
+}
+
+.theme-picker-caret {
+  flex: 0 0 auto;
+  margin-left: 1px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+#theme-toggle[aria-expanded="true"] {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+#theme-toggle[aria-expanded="true"] .theme-picker-caret {
+  transform: rotate(180deg);
+}
+
+.theme-swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  flex: 0 0 auto;
+  box-shadow: inset 0 0 0 1px rgba(40, 30, 20, 0.12);
+}
+
+.theme-swatch.on-dark {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+/* "Auto" swatch — half light / half dark split. */
+.theme-swatch.is-auto {
+  background: linear-gradient(135deg, #faf9f5 0 50%, #1a1613 50% 100%);
+}
+
+.theme-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 12px;
+  min-width: 188px;
+  padding: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(40, 30, 20, 0.18), 0 2px 8px rgba(40, 30, 20, 0.10);
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+  z-index: 50;
+}
+
+.theme-menu.is-open {
+  display: flex;
+  animation: theme-menu-in 0.12s ease;
+}
+
+@keyframes theme-menu-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 9px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.theme-option:hover {
+  background: var(--bg-hover);
+}
+
+.theme-option-label {
+  flex: 1 1 auto;
+}
+
+.theme-option-check {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 12px;
+  opacity: 0;
+}
+
+.theme-option.is-selected {
+  font-weight: 600;
+}
+
+.theme-option.is-selected .theme-option-check {
+  opacity: 1;
+}
+
+.theme-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}

@@ -1,0 +1,21 @@
+{
+  "name": "terminal-container",
+  "version": "0.1.0",
+  "description": "A terminal session container with a chat-history-style sidebar panel showing active terminals.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "node build/postinstall.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-web-links": "^0.11.0",
+    "@xterm/xterm": "^5.5.0",
+    "node-pty": "^1.0.0"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}
