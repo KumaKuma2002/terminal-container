@@ -486,17 +486,39 @@
     dom.sessionList.appendChild(row);
 
     // 6. Store everything.
-    sessions.set(session.id, {
+    var entry = {
       session: session,
       term: term,
       fitAddon: fitAddon,
       el: div,
       body: body,
       row: row,
-      headerTitle: headerTitle
-    });
+      headerTitle: headerTitle,
+      resizeObserver: null,
+      fitRaf: 0
+    };
+    sessions.set(session.id, entry);
 
-    // 7. Bookkeeping. A new tile reflows the grid → refit all tiles.
+    // 7. Refit whenever the body's box ACTUALLY changes size. A one-shot fit on
+    // mount/focus/resize can lock in a row count for a box that hasn't reached
+    // its final height yet (initial layout settle, scrollbar reservation, tile
+    // becoming visible after display:none, grid reflow) — the extra rows then
+    // render past #terminals' overflow:hidden edge and the bottom line gets
+    // clipped, with nothing left to re-fit it. The observer closes that gap.
+    // We watch the BODY (whose *children* xterm resizes), so fit() never feeds
+    // back into the observer.
+    if (typeof window.ResizeObserver === "function") {
+      entry.resizeObserver = new window.ResizeObserver(function () {
+        if (entry.fitRaf) return; // coalesce bursts into one fit per frame
+        entry.fitRaf = window.requestAnimationFrame(function () {
+          entry.fitRaf = 0;
+          safeFit(entry);
+        });
+      });
+      entry.resizeObserver.observe(body);
+    }
+
+    // 8. Bookkeeping. A new tile reflows the grid → refit all tiles.
     updateSessionCount();
     if (isGrid()) scheduleFitAll();
   }
@@ -566,6 +588,11 @@
       .then(function () {
         var entry = sessions.get(id);
         if (!entry) return;
+
+        // Stop observing before teardown so the observer can't fire on a
+        // detached node, and cancel any pending refit frame.
+        try { if (entry.resizeObserver) entry.resizeObserver.disconnect(); } catch (e) {}
+        if (entry.fitRaf) { window.cancelAnimationFrame(entry.fitRaf); entry.fitRaf = 0; }
 
         // Dispose xterm and detach DOM.
         try { if (entry.term) entry.term.dispose(); } catch (e) {}
@@ -745,6 +772,14 @@
     }
 
     window.addEventListener("resize", onWindowResize);
+
+    // The monospace font can finish loading AFTER the first fit, changing the
+    // cell height while the body's box stays the same — the ResizeObserver
+    // can't see that, so the row count would be off (bottom row clipped) until
+    // the next resize. Re-fit once fonts are ready to settle it.
+    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === "function") {
+      document.fonts.ready.then(function () { fitAll(); });
+    }
 
     // Initialize count / empty-state.
     updateSessionCount();

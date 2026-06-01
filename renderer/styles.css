@@ -669,6 +669,14 @@ body {
   min-height: 0;
   position: relative;
   padding: 8px;
+  /* xterm's FitAddon reads getComputedStyle(host).height and subtracts only the
+     host's OWN padding. Under the global border-box, that computed height is the
+     border-box (it includes this 8px padding), so FitAddon over-counts the room
+     by 16px, computes one extra row/col, and the bottom row gets clipped past
+     the box. content-box makes the computed height the true content size, so the
+     fit math is exact. (Padding/appearance are unchanged — height here is auto
+     and flex-grow fills the same border-box either way.) */
+  box-sizing: content-box;
 }
 
 /* ---- Single mode: show only the active tile, no headers ---- */
