@@ -43,14 +43,16 @@
   // ---- Theme registry ----
   // id matches :root[data-theme="<id>"] in styles.css. `swatch` drives the
   // picker dot; `dark` flags the family; `xterm` keeps the terminal in sync.
-  // All themes share the warm clay accent. Order = order shown in the picker.
+  // Two light themes (Pure White, Silver); every other theme sits on a dark or
+  // grey base with its own hue as the accent. Order = order shown in the picker.
   var THEMES = [
     { id: "auto",        label: "Auto",        swatch: "auto",    dark: null },
     { id: "pure-white",  label: "Pure White",  swatch: "#ffffff", dark: false, xterm: mkXterm("#ffffff", "#1c1917", "#d97757", "#f6d8c9", ANSI_LIGHT) },
     { id: "silver",      label: "Silver",      swatch: "#dcdce0", dark: false, xterm: mkXterm("#f4f4f5", "#2b2b2e", "#d97757", "#ecd6c8", ANSI_LIGHT) },
-    { id: "mocha",       label: "Mocha",       swatch: "#c79e7f", dark: false, xterm: mkXterm("#f1e9e1", "#43342a", "#bf6b43", "#e3c9b3", ANSI_LIGHT) },
-    { id: "pink",        label: "Pink",        swatch: "#f3c6cf", dark: false, xterm: mkXterm("#fdf3f4", "#4a2e34", "#d97757", "#f6d2d9", ANSI_LIGHT) },
-    { id: "claude-cozy", label: "Claude Cozy", swatch: "#d97757", dark: false, xterm: mkXterm("#f0eee6", "#2e2a23", "#d97757", "#ecd3c2", ANSI_LIGHT) },
+    { id: "claude-cozy", label: "Claude Cozy", swatch: "#d97757", dark: true,  xterm: mkXterm("#1f1812", "#f0e6d8", "#e08a63", "rgba(224,138,99,0.32)", ANSI_DARK) },
+    { id: "mocha",       label: "Mocha",       swatch: "#c89060", dark: true,  xterm: mkXterm("#211913", "#ece0d2", "#d39a6a", "rgba(211,154,106,0.30)", ANSI_DARK) },
+    { id: "matcha",      label: "Matcha",      swatch: "#8fae5d", dark: true,  xterm: mkXterm("#181d16", "#e6ecdb", "#a3c46e", "rgba(163,196,110,0.30)", ANSI_DARK) },
+    { id: "pink",        label: "Pink",        swatch: "#d98aa0", dark: true,  xterm: mkXterm("#201a1d", "#ece0e4", "#e090a6", "rgba(224,144,166,0.30)", ANSI_DARK) },
     { id: "dark",        label: "Dark",        swatch: "#1a1613", dark: true,  xterm: mkXterm("#1a1613", "#ece3d8", "#e08a63", "rgba(224,138,99,0.32)", ANSI_DARK) },
     { id: "grey-dark",   label: "Grey Dark",   swatch: "#3a3a38", dark: true,  xterm: mkXterm("#1f1f1e", "#e6e3de", "#e08a63", "rgba(224,138,99,0.32)", ANSI_DARK) }
   ];

@@ -74,70 +74,92 @@
   color-scheme: light;
 }
 
-/* ---- Mocha — warm latte, espresso ink ---- */
+/* ---- Mocha — dark coffee, caramel accent ---- */
 :root[data-theme="mocha"] {
-  --bg:            #f1e9e1;
-  --bg-sidebar:    #eaded3;
-  --bg-elevated:   #f7f1ea;
-  --bg-hover:      #e6d8c9;
-  --accent-soft:   #ecd6c5;
-  --text:          #43342a;
-  --text-muted:    #8a7563;
-  --border:        #ddccbb;
-  --accent:        #bf6b43;
-  --accent-hover:  #a3552f;
-  --status-running:#7a8a55;
-  --status-idle:   #ab9a88;
-  --status-exited: #c25c3f;
-  --danger-soft:   #ecd3c6;
-  --btn-bg:        #43342a;
-  --btn-fg:        #f1e9e1;
-  --btn-bg-hover:  #5c4636;
-  color-scheme: light;
+  --bg:            #211913;
+  --bg-sidebar:    #1a130d;
+  --bg-elevated:   #2a201a;
+  --bg-hover:      #322619;
+  --accent-soft:   rgba(211, 154, 106, 0.18);
+  --text:          #ece0d2;
+  --text-muted:    #b09a85;
+  --border:        #3a2c20;
+  --accent:        #d39a6a;
+  --accent-hover:  #e6b487;
+  --status-running:#8caa6a;
+  --status-idle:   #b09a85;
+  --status-exited: #e8836a;
+  --danger-soft:   rgba(232, 131, 106, 0.16);
+  --btn-bg:        #ece0d2;
+  --btn-fg:        #211913;
+  --btn-bg-hover:  #ffffff;
+  color-scheme: dark;
 }
 
-/* ---- Pink — soft blush, clay accent ---- */
+/* ---- Pink — dark plum, rose accent ---- */
 :root[data-theme="pink"] {
-  --bg:            #fdf3f4;
-  --bg-sidebar:    #fbe9ec;
-  --bg-elevated:   #fef8f9;
-  --bg-hover:      #f7dee3;
-  --accent-soft:   #f9dde2;
-  --text:          #4a2e34;
-  --text-muted:    #9c7079;
-  --border:        #f1d7dd;
-  --accent:        #d97757;
-  --accent-hover:  #c2603f;
-  --status-running:#7a9a6d;
-  --status-idle:   #c3a7ac;
-  --status-exited: #d05a55;
-  --danger-soft:   #f9dadf;
-  --btn-bg:        #4a2e34;
-  --btn-fg:        #fdf3f4;
-  --btn-bg-hover:  #67424a;
-  color-scheme: light;
+  --bg:            #201a1d;
+  --bg-sidebar:    #191417;
+  --bg-elevated:   #2a2226;
+  --bg-hover:      #322830;
+  --accent-soft:   rgba(224, 144, 166, 0.18);
+  --text:          #ece0e4;
+  --text-muted:    #b29aa2;
+  --border:        #3a2e34;
+  --accent:        #e090a6;
+  --accent-hover:  #f2a8bc;
+  --status-running:#8caa6a;
+  --status-idle:   #b29aa2;
+  --status-exited: #e8836a;
+  --danger-soft:   rgba(232, 131, 106, 0.16);
+  --btn-bg:        #ece0e4;
+  --btn-fg:        #201a1d;
+  --btn-bg-hover:  #ffffff;
+  color-scheme: dark;
 }
 
-/* ---- Claude Cozy — signature cream + clay ---- */
+/* ---- Claude Cozy — signature warm dark + clay ---- */
 :root[data-theme="claude-cozy"] {
-  --bg:            #f0eee6;
-  --bg-sidebar:    #e9e6db;
-  --bg-elevated:   #faf9f5;
-  --bg-hover:      #e4e0d3;
-  --accent-soft:   #f1ddd0;
-  --text:          #2e2a23;
-  --text-muted:    #7d7561;
-  --border:        #ddd8c9;
-  --accent:        #d97757;
-  --accent-hover:  #c2603f;
-  --status-running:#6f8f5e;
-  --status-idle:   #aaa18b;
-  --status-exited: #c95f44;
-  --danger-soft:   #f2ddd2;
-  --btn-bg:        #2e2a23;
-  --btn-fg:        #f0eee6;
-  --btn-bg-hover:  #4a4438;
-  color-scheme: light;
+  --bg:            #1f1812;
+  --bg-sidebar:    #17110b;
+  --bg-elevated:   #2a2018;
+  --bg-hover:      #32271d;
+  --accent-soft:   rgba(224, 138, 99, 0.20);
+  --text:          #f0e6d8;
+  --text-muted:    #b3a08a;
+  --border:        #392c20;
+  --accent:        #e08a63;
+  --accent-hover:  #f0a07d;
+  --status-running:#7fae6a;
+  --status-idle:   #b3a08a;
+  --status-exited: #e8765c;
+  --danger-soft:   rgba(232, 118, 92, 0.16);
+  --btn-bg:        #f0e6d8;
+  --btn-fg:        #1f1812;
+  --btn-bg-hover:  #ffffff;
+  color-scheme: dark;
+}
+
+/* ---- Matcha — dark forest, green-tea accent ---- */
+:root[data-theme="matcha"] {
+  --bg:            #181d16;
+  --bg-sidebar:    #121710;
+  --bg-elevated:   #212820;
+  --bg-hover:      #283026;
+  --accent-soft:   rgba(163, 196, 110, 0.18);
+  --text:          #e6ecdb;
+  --text-muted:    #9aa888;
+  --border:        #2e372a;
+  --accent:        #a3c46e;
+  --accent-hover:  #bdda8a;
+  --status-running:#8fbf6a;
+  --status-idle:   #9aa888;
+  --status-exited: #e8836a;
+  --danger-soft:   rgba(232, 131, 106, 0.16);
+  --btn-bg:        #e6ecdb;
+  --btn-fg:        #181d16;
+  --btn-bg-hover:  #ffffff;
+  color-scheme: dark;
 }
 
 /* ---------- Dark theme tokens (cozy / warm) ----------
