@@ -287,7 +287,8 @@ function createWindow() {
     transparent: true,
     backgroundColor: '#00000000',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
-    trafficLightPosition: process.platform === 'darwin' ? { x: 24, y: 22 } : undefined,
+    // Lights sit in the 34px transparent strip above the floating cards.
+    trafficLightPosition: process.platform === 'darwin' ? { x: 20, y: 16 } : undefined,
     vibrancy: process.platform === 'darwin' ? 'under-window' : undefined,
     visualEffectState: process.platform === 'darwin' ? 'active' : undefined,
     roundedCorners: true,

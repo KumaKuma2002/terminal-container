@@ -1104,13 +1104,15 @@ body::after {
   animation: glass-breathe 7s ease-in-out infinite;
 }
 
-/* Two floating glass cards on a frosted mat: the window keeps one blurred
-   backdrop; the sidebar and main area each become their own molded pane. */
+/* Two floating glass cards on a frosted mat. The 34px top padding leaves a
+   dedicated transparent strip where the traffic lights live at their
+   DEFAULT system position — no hand-pinning, always aligned (the strip is
+   also the native window's drag area). */
 #app {
   position: relative;
   z-index: 1;
   gap: 10px;
-  padding: 10px;
+  padding: 34px 10px 10px;
   background: color-mix(in srgb, var(--bg) 8%, transparent);
 }
 
@@ -1171,8 +1173,7 @@ body::after {
 }
 
 .sidebar-header {
-  min-height: 64px;
-  padding-top: 40px; /* clear the inset traffic lights above the card edge */
+  min-height: 52px;
   -webkit-app-region: drag;
 }
 

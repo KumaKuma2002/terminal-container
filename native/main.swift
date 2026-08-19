@@ -34,40 +34,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         window.center()
         window.makeKeyAndOrderFront(nil)
 
-        // Match the HTML layout: cards float 10px in, lights at (24, 22)
-        // measured from the window's top-left.
-        DispatchQueue.main.async { self.repositionTrafficLights() }
-
         NSApp.activate(ignoringOtherApps: true)
         log("native host launched")
     }
 
-    private func repositionTrafficLights() {
-        guard let window = window else { return }
-        let buttons = [
-            window.standardWindowButton(.closeButton),
-            window.standardWindowButton(.miniaturizeButton),
-            window.standardWindowButton(.zoomButton)
-        ].compactMap { $0 }
-        guard let first = buttons.first else { return }
-        let spacing = buttons.count > 1 ? buttons[1].frame.minX - first.frame.minX : 20
-        for (index, button) in buttons.enumerated() {
-            var frame = button.frame
-            frame.origin.x = 24 + CGFloat(index) * spacing
-            frame.origin.y = 22
-            button.frame = frame
-        }
-    }
-
-    // AppKit resets the standard buttons to default positions on layout
-    // passes — keep pinning them where the HTML expects (24, 22).
-    func windowDidResize(_ notification: Notification) {
-        DispatchQueue.main.async { self.repositionTrafficLights() }
-    }
-
-    func windowDidBecomeKey(_ notification: Notification) {
-        DispatchQueue.main.async { self.repositionTrafficLights() }
-    }
+    // The traffic lights keep their DEFAULT system position: the HTML leaves
+    // a dedicated 34px transparent strip at the top of the window (see #app
+    // padding in styles.css), so hand-pinning the buttons is unnecessary —
+    // and pinning fights AppKit's layout passes, which caused the visible
+    // misalignment.
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         host?.bridge.store.killAll()
@@ -106,10 +81,10 @@ final class HostViewController: NSViewController, WKNavigationDelegate {
         self.webView = webView
         bridge.attach(to: webView)
 
-        // The HTML drag regions (-webkit-app-region) are Chromium-only; a
-        // 16px transparent strip above the cards' 10px margin restores
-        // window dragging without covering any control.
-        let strip = DragStripView(frame: NSRect(x: 0, y: view.bounds.height - 16, width: view.bounds.width, height: 16))
+        // The HTML drag regions (-webkit-app-region) are Chromium-only; the
+        // 30px transparent strip above the cards (where the traffic lights
+        // live) doubles as the window drag area.
+        let strip = DragStripView(frame: NSRect(x: 0, y: view.bounds.height - 30, width: view.bounds.width, height: 30))
         strip.autoresizingMask = [.width, .minYMargin]
         view.addSubview(strip)
 
