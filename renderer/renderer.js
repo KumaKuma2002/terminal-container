@@ -1562,6 +1562,11 @@
     // Register IPC handlers exactly once.
     registerIpcHandlers();
 
+    // Native (WKWebView) host: no <webview> support — hide the preview button.
+    if (window.termAPI && window.termAPI.capabilities && window.termAPI.capabilities.preview === false && dom.newPreviewBtn) {
+      dom.newPreviewBtn.style.display = "none";
+    }
+
     // Wire UI controls.
     if (dom.newSessionBtn) {
       dom.newSessionBtn.addEventListener("click", function () { newSession(); });
