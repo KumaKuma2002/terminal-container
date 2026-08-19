@@ -13,6 +13,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
+const { pathToFileURL } = require('url');
 const pty = require('node-pty');
 
 // ---------------------------------------------------------------------------
@@ -132,6 +133,17 @@ function maybeUpdateTitle(entry, data) {
 function initialTitle(shell, cwd) {
   const base = path.basename(cwd) || cwd;
   return `${path.basename(shell)} — ${base}`;
+}
+
+function isAllowedPreviewUrl(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    if (url.protocol === 'http:' || url.protocol === 'https:') return true;
+    const startUrl = pathToFileURL(path.join(__dirname, 'renderer', 'preview-start.html')).href;
+    return url.href === startUrl;
+  } catch {
+    return false;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -268,12 +280,45 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 780,
+    minWidth: 820,
+    minHeight: 560,
+    // Let macOS provide the real blurred desktop material beneath the CSS
+    // glass layers. The transparent fallback is harmless on other platforms.
+    transparent: true,
+    backgroundColor: '#00000000',
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
+    trafficLightPosition: process.platform === 'darwin' ? { x: 24, y: 22 } : undefined,
+    vibrancy: process.platform === 'darwin' ? 'under-window' : undefined,
+    visualEffectState: process.platform === 'darwin' ? 'active' : undefined,
+    roundedCorners: true,
+    hasShadow: true,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
+      webviewTag: true,
       preload: path.join(__dirname, 'preload.js'),
     },
+  });
+
+  // Web previews run as isolated guests: no Node, no preload bridge, no
+  // arbitrary file:// navigation, and no surprise popup windows.
+  mainWindow.webContents.on('will-attach-webview', (event, webPreferences, params) => {
+    delete webPreferences.preload;
+    webPreferences.nodeIntegration = false;
+    webPreferences.contextIsolation = true;
+    webPreferences.sandbox = true;
+
+    if (!isAllowedPreviewUrl(params.src)) {
+      event.preventDefault();
+    }
+  });
+
+  mainWindow.webContents.on('did-attach-webview', (_event, guestContents) => {
+    guestContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+    guestContents.on('will-navigate', (event, url) => {
+      if (!isAllowedPreviewUrl(url)) event.preventDefault();
+    });
   });
 
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));

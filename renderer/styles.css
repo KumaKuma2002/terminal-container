@@ -466,6 +466,7 @@ body {
 
 .session-status[data-state="running"] {
   background: var(--status-running);
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--status-running) 70%, transparent));
   animation: status-pulse 1.6s ease-in-out infinite;
 }
 
@@ -599,6 +600,111 @@ body {
   background: var(--danger-soft);
 }
 
+/* ---------- Terminal tabs (topbar switch + add) ---------- */
+/* The tab strip now conveys the active terminal's title, so the standalone
+   #active-title is hidden — kept in the DOM (and still updated) for the contract. */
+#active-title { display: none; }
+
+.term-tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none; /* keep the strip clean; still scrollable via wheel/drag */
+}
+.term-tabs::-webkit-scrollbar { height: 0; width: 0; }
+
+.term-tab {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 210px;
+  min-width: 0;
+  height: 30px;
+  padding: 0 5px 0 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s ease, color 0.1s ease, box-shadow 0.1s ease;
+}
+.term-tab:hover { background: var(--bg-hover); color: var(--text); }
+.term-tab.is-active {
+  background: var(--accent-soft);
+  color: var(--text);
+  border-color: var(--border);
+}
+.term-tab.is-active .term-tab-title { font-weight: 600; }
+
+.term-tab-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+
+.term-tab-close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease;
+}
+.term-tab:hover .term-tab-close,
+.term-tab.is-active .term-tab-close { opacity: 1; }
+.term-tab-close:hover { color: var(--status-exited); background: var(--bg-hover); }
+
+/* the + button at the end of the strip — quiet ghost square */
+.term-tab-add {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--btn-radius);
+  background: transparent;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.term-tab-add:hover { background: var(--bg-hover); border-color: var(--text-muted); }
+.term-tab-add:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---- drag-to-reorder (tabs + sidebar rows share these classes) ---- */
+.term-tab.is-dragging,
+.session-item.is-dragging { opacity: 0.45; }
+
+/* insertion marker: a clay bar on the side the dragged item will land */
+.term-tab.drop-before { box-shadow: inset 2px 0 0 0 var(--accent); }
+.term-tab.drop-after  { box-shadow: inset -2px 0 0 0 var(--accent); }
+.session-item.drop-before { box-shadow: inset 0 2px 0 0 var(--accent); }
+.session-item.drop-after  { box-shadow: inset 0 -2px 0 0 var(--accent); }
+
 /* ---------- Terminals area ---------- */
 #terminals {
   flex: 1 1 auto;
@@ -718,18 +824,39 @@ body {
 }
 
 /* ---------- Empty state ---------- */
+/* Lives inside #terminals now, so inset:0 already sits below the topbar —
+   no hardcoded topbar height to keep in sync with the tab strip. */
 #empty-state {
   position: absolute;
   inset: 0;
-  top: 49px; /* sit below topbar */
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   text-align: center;
   padding: 24px;
   color: var(--text-muted);
   font-size: 14px;
   pointer-events: none;
+}
+
+.empty-glyph {
+  font-size: 42px;
+  line-height: 1;
+  opacity: 0.9;
+  filter: drop-shadow(0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+
+#empty-state kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-line);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 25%, transparent), 0 1px 2px rgba(0, 0, 0, 0.08);
+  color: var(--text);
 }
 
 /* ---------- Scrollbars (thin / subtle) ---------- */
@@ -766,7 +893,8 @@ body {
 
 /* Footer theme picker — a clearly clickable labeled control:
    [swatch] Theme name [chevron]. Reads as a dropdown trigger, not a stray dot. */
-#theme-toggle {
+#theme-toggle,
+#font-toggle {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -778,9 +906,12 @@ body {
   color: var(--text);
 }
 
-.theme-picker-label {
+.theme-picker-label,
+.font-picker-label {
   flex: 0 1 auto;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   letter-spacing: -0.005em;
 }
 
@@ -820,15 +951,16 @@ body {
   background: linear-gradient(135deg, #faf9f5 0 50%, #1a1613 50% 100%);
 }
 
-.theme-menu {
+.theme-menu,
+.font-menu {
   position: absolute;
   bottom: calc(100% + 8px);
   right: 12px;
-  min-width: 188px;
-  padding: 6px;
+  min-width: 216px;
+  padding: 7px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 12px 32px rgba(40, 30, 20, 0.18), 0 2px 8px rgba(40, 30, 20, 0.10);
   display: none;
   flex-direction: column;
@@ -836,7 +968,14 @@ body {
   z-index: 50;
 }
 
-.theme-menu.is-open {
+.font-menu {
+  min-width: 252px;
+  max-height: min(440px, 62vh);
+  overflow-y: auto;
+}
+
+.theme-menu.is-open,
+.font-menu.is-open {
   display: flex;
   animation: theme-menu-in 0.12s ease;
 }
@@ -889,4 +1028,761 @@ body {
 .theme-option:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
+}
+
+/* ============================================================================
+   macOS dynamic glass layer
+   Native vibrancy is enabled by BrowserWindow; these translucent surfaces add
+   depth, edge highlights, and a pointer-following reflection above it.
+   ============================================================================ */
+/* Registered so the pointer-following specular can *ease* between values —
+   unregistered custom properties jump instead of interpolating. */
+@property --glass-x { syntax: "<length>"; inherits: true; initial-value: 66vw; }
+@property --glass-y { syntax: "<length>"; inherits: true; initial-value: 70px; }
+
+:root {
+  --glass-x: 66vw;
+  --glass-y: 70px;
+  --glass-window: color-mix(in srgb, var(--bg) 24%, transparent);
+  --glass-panel: color-mix(in srgb, var(--bg-sidebar) 54%, transparent);
+  --glass-surface: color-mix(in srgb, var(--bg-elevated) 66%, transparent);
+  --glass-strong: color-mix(in srgb, var(--bg-elevated) 80%, transparent);
+  --glass-hover: color-mix(in srgb, var(--bg-hover) 76%, transparent);
+  --glass-line: color-mix(in srgb, var(--text) 13%, transparent);
+  --glass-highlight: color-mix(in srgb, white 62%, transparent);
+  --glass-glow: color-mix(in srgb, var(--accent) 20%, transparent);
+  --glass-shadow: rgba(34, 26, 20, 0.16);
+  --glass-shadow-deep: rgba(30, 23, 17, 0.4);
+  --r-card: 24px;
+  --r-capsule: 999px;
+  transition: --glass-x 260ms cubic-bezier(0.25, 0.9, 0.3, 1),
+              --glass-y 260ms cubic-bezier(0.25, 0.9, 0.3, 1);
+}
+
+html,
+body {
+  background: transparent;
+}
+
+body {
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, white 9%, transparent), transparent 46%),
+    var(--glass-window);
+  backdrop-filter: blur(36px) saturate(175%);
+  -webkit-backdrop-filter: blur(36px) saturate(175%);
+}
+
+/* Pointer-tracked specular: a warm halo with a brighter core that glides
+   across the BACK of the glass (it shows through every translucent layer
+   above). The :root transition gives it a lazy, liquid lag. */
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  left: var(--glass-x);
+  top: var(--glass-y);
+  width: min(680px, 66vw);
+  aspect-ratio: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(closest-side at 50% 44%, color-mix(in srgb, white 28%, transparent) 0%, color-mix(in srgb, white 5%, transparent) 40%, transparent 64%),
+    radial-gradient(closest-side at 50% 58%, var(--glass-glow) 0%, transparent 58%);
+  filter: blur(22px);
+  opacity: 0.55;
+  animation: glass-breathe 7s ease-in-out infinite;
+}
+
+/* Two floating glass cards on a frosted mat: the window keeps one blurred
+   backdrop; the sidebar and main area each become their own molded pane. */
+#app {
+  position: relative;
+  z-index: 1;
+  gap: 10px;
+  padding: 10px;
+  background: color-mix(in srgb, var(--bg) 8%, transparent);
+}
+
+/* Film grain — barely-there noise that makes the material read as glass
+   instead of plastic. Sits over everything, never interactive. */
+#app::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+#sidebar {
+  position: relative;
+  background:
+    radial-gradient(150% 90% at 88% -12%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%),
+    var(--glass-panel);
+  border-right: none;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 34%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, white 7%, transparent),
+    0 26px 66px var(--glass-shadow-deep),
+    0 5px 16px var(--glass-shadow),
+    0 34px 96px color-mix(in srgb, var(--accent) 9%, transparent);
+  backdrop-filter: blur(32px) saturate(165%);
+  -webkit-backdrop-filter: blur(32px) saturate(165%);
+}
+
+#main {
+  position: relative;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background:
+    radial-gradient(140% 100% at 112% -22%, color-mix(in srgb, white 6%, transparent), transparent 52%),
+    var(--glass-panel);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 30%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, white 6%, transparent),
+    0 30px 74px var(--glass-shadow-deep),
+    0 6px 18px var(--glass-shadow),
+    0 38px 104px color-mix(in srgb, var(--accent) 8%, transparent);
+  backdrop-filter: blur(32px) saturate(165%);
+  -webkit-backdrop-filter: blur(32px) saturate(165%);
+}
+
+/* Corner beads + a sheen band where light catches the top of the pane. */
+#sidebar::before,
+#main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, white 9%, transparent), transparent 14%),
+    radial-gradient(130px 85px at 16% -8%, color-mix(in srgb, white 16%, transparent), transparent 62%),
+    radial-gradient(200px 135px at -8% 112%, color-mix(in srgb, white 8%, transparent), transparent 65%);
+}
+
+/* The refractive edge: a hairline lens ring that re-blurs whatever crosses
+   the border, over a whisper of chromatic dispersion — the faint rainbow
+   fringing real glass shows where light bends at the rim. */
+#sidebar::after,
+#main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 2px;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, white 55%, transparent),
+      color-mix(in srgb, white 8%, transparent) 30%,
+      transparent 60%,
+      color-mix(in srgb, white 15%, transparent)
+    ),
+    conic-gradient(
+      from 215deg,
+      rgba(122, 172, 255, 0.10),
+      rgba(255, 158, 192, 0.07) 22%,
+      rgba(255, 235, 168, 0.09) 45%,
+      rgba(148, 255, 214, 0.07) 70%,
+      rgba(122, 172, 255, 0.10)
+    );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  backdrop-filter: blur(1px) saturate(180%) brightness(1.05);
+  -webkit-backdrop-filter: blur(1px) saturate(180%) brightness(1.05);
+}
+
+#terminals,
+.term-instance {
+  background: transparent;
+}
+
+#terminals {
+  background: color-mix(in srgb, var(--bg) 20%, transparent);
+}
+
+.sidebar-header {
+  min-height: 64px;
+  padding-top: 40px; /* clear the inset traffic lights above the card edge */
+  -webkit-app-region: drag;
+}
+
+.sidebar-header button,
+.topbar > * {
+  -webkit-app-region: no-drag;
+}
+
+.topbar {
+  position: relative;
+  min-height: 52px;
+  padding: 10px 14px;
+  border-bottom-color: var(--glass-line);
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, white 7%, transparent), transparent 72%),
+    color-mix(in srgb, var(--bg) 26%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 26%, transparent);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  -webkit-app-region: drag;
+}
+
+.btn-ghost,
+#session-filter,
+.term-tab-add {
+  background: color-mix(in srgb, var(--glass-surface) 82%, transparent);
+  border-color: var(--glass-line);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 24%, transparent),
+    0 1px 2px color-mix(in srgb, var(--text) 5%, transparent);
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+}
+
+.term-tab-add { border-radius: 50%; }
+#session-filter { border-radius: 12px; }
+
+.btn-ghost:hover,
+.term-tab-add:hover {
+  background: var(--glass-hover);
+  border-color: color-mix(in srgb, var(--text) 24%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 34%, transparent), 0 4px 12px var(--glass-shadow);
+}
+
+/* The + becomes a warm glass bead — the one saturated pop in the chrome. */
+#new-session-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--r-capsule);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 82%, white 18%),
+    var(--accent) 52%,
+    color-mix(in srgb, var(--accent) 86%, black 14%)
+  );
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    0 6px 18px color-mix(in srgb, var(--accent) 45%, transparent),
+    0 2px 6px var(--glass-shadow);
+  transition: filter 0.14s ease, transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.16s ease;
+}
+
+#new-session-btn:hover {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 82%, white 18%),
+    var(--accent) 52%,
+    color-mix(in srgb, var(--accent) 86%, black 14%)
+  );
+  filter: brightness(1.07) saturate(1.05);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    0 9px 24px color-mix(in srgb, var(--accent) 55%, transparent),
+    0 3px 8px var(--glass-shadow);
+}
+
+#new-session-btn:active {
+  transform: scale(0.92);
+  filter: brightness(0.97);
+}
+
+.session-item {
+  border: 1px solid transparent;
+  border-left-width: 3px;
+  border-radius: 12px;
+  transition: background 160ms ease, border-color 160ms ease, transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease;
+}
+
+.session-item:hover {
+  background: var(--glass-hover);
+  border-color: color-mix(in srgb, var(--text) 8%, transparent);
+  transform: translateX(2px);
+}
+
+.session-item.is-active {
+  background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 18%, transparent), var(--glass-surface));
+  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+  border-left-color: var(--accent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 18%, transparent), 0 5px 16px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.sidebar-footer {
+  position: relative; /* anchor for the theme + font popovers */
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-top-color: var(--glass-line);
+  background: color-mix(in srgb, var(--bg-sidebar) 26%, transparent);
+}
+
+#session-count {
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  opacity: 0.72;
+}
+
+.footer-pickers {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+#font-toggle,
+#theme-toggle {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 30px;
+}
+
+.font-picker-glyph {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.theme-menu,
+.font-menu {
+  background: var(--glass-strong);
+  border-color: var(--glass-line);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 30%, transparent),
+    0 24px 64px var(--glass-shadow-deep),
+    0 4px 14px var(--glass-shadow);
+  backdrop-filter: blur(30px) saturate(160%);
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+}
+
+/* Menus get the same refractive edge treatment as the big panes. */
+.theme-menu::after,
+.font-menu::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, white 42%, transparent),
+    transparent 58%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* Each tab is an individual floating glass capsule. */
+.term-tabs {
+  gap: 7px;
+  padding: 4px 3px;
+}
+
+.term-tab {
+  position: relative;
+  height: 32px;
+  padding: 0 6px 0 12px;
+  border-color: var(--glass-line);
+  border-radius: var(--r-capsule);
+  background: color-mix(in srgb, var(--glass-surface) 68%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 18%, transparent), 0 2px 6px color-mix(in srgb, var(--text) 5%, transparent);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  transition:
+    transform 180ms cubic-bezier(.2,.8,.2,1),
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 180ms ease,
+    opacity 140ms ease;
+}
+
+.term-tab:hover {
+  background: var(--glass-hover);
+  border-color: color-mix(in srgb, var(--text) 20%, transparent);
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 38%, transparent), 0 8px 18px var(--glass-shadow);
+}
+
+.term-tab.is-active {
+  background: linear-gradient(125deg, color-mix(in srgb, white 18%, transparent), color-mix(in srgb, var(--accent) 20%, var(--glass-surface)));
+  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 48%, transparent),
+    0 7px 20px color-mix(in srgb, var(--accent) 16%, transparent),
+    0 1px 3px var(--glass-shadow);
+}
+
+/* Capsule sheen — a highlight rolling along the top of each glass pill. */
+.term-tab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 46%);
+}
+
+.term-tab.is-dragging,
+.session-item.is-dragging {
+  opacity: 0.18;
+  transform: scale(0.96);
+}
+
+.drag-avatar {
+  position: fixed !important;
+  inset: auto !important;
+  z-index: 1000;
+  margin: 0 !important;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.97;
+  background: var(--glass-strong) !important;
+  border: 1px solid color-mix(in srgb, white 38%, var(--glass-line)) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 52%, transparent),
+    0 22px 50px color-mix(in srgb, var(--text) 22%, transparent),
+    0 5px 14px var(--glass-shadow) !important;
+  backdrop-filter: blur(26px) saturate(170%);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
+  transform: rotate(0.8deg) scale(1.035);
+  animation: glass-tab-lift 150ms cubic-bezier(.2,.8,.2,1);
+}
+
+.drag-avatar .term-tab-close,
+.drag-avatar .session-close {
+  opacity: 0;
+}
+
+.is-reordering,
+.is-reordering * {
+  cursor: grabbing !important;
+}
+
+.term-tab.drop-before {
+  box-shadow: -4px 0 0 -1px var(--accent), 0 7px 18px var(--glass-shadow);
+}
+
+.term-tab.drop-after {
+  box-shadow: 4px 0 0 -1px var(--accent), 0 7px 18px var(--glass-shadow);
+}
+
+#terminals.is-grid .term-instance {
+  background: color-mix(in srgb, var(--bg-elevated) 36%, transparent);
+  border-color: var(--glass-line);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 22%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, white 5%, transparent),
+    0 14px 34px color-mix(in srgb, var(--text) 10%, transparent);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+}
+
+.term-header {
+  background: color-mix(in srgb, var(--bg-sidebar) 48%, transparent);
+  border-bottom-color: var(--glass-line);
+}
+
+.xterm,
+.xterm-viewport,
+.xterm-screen {
+  background-color: transparent !important;
+}
+
+.session-status[data-state="preview"] {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.preview-tab-add svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.preview-instance .term-header-title::before {
+  content: "◎";
+  margin-right: 6px;
+  color: var(--accent);
+}
+
+.preview-surface {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg) 16%, transparent);
+}
+
+.preview-toolbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--glass-line);
+  background: color-mix(in srgb, var(--bg-sidebar) 34%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 16%, transparent);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+.preview-nav-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  font: 500 21px/1 var(--font-sans);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, transform 120ms ease, opacity 140ms ease;
+}
+
+.preview-reload {
+  font-size: 16px;
+}
+
+.preview-nav-button:hover:not(:disabled) {
+  background: var(--glass-hover);
+  border-color: var(--glass-line);
+  transform: translateY(-1px);
+}
+
+.preview-nav-button:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.preview-nav-button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.preview-address-form {
+  flex: 1 1 auto;
+  min-width: 90px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid var(--glass-line);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--glass-surface) 78%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 22%, transparent), 0 1px 3px color-mix(in srgb, var(--text) 6%, transparent);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.preview-address-form:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 58%, transparent);
+  background: var(--glass-strong);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 28%, transparent), 0 0 0 3px var(--accent-soft);
+}
+
+.preview-security-mark {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.preview-address {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: 12.5px/1 var(--font-sans);
+}
+
+.preview-address::placeholder {
+  color: color-mix(in srgb, var(--text-muted) 76%, transparent);
+}
+
+.preview-address.is-invalid {
+  color: var(--status-exited);
+}
+
+.preview-address-form:has(.preview-address.is-invalid) {
+  border-color: var(--status-exited);
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+.preview-webview {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: transparent;
+}
+
+#terminals.is-grid .preview-toolbar {
+  min-height: 40px;
+  padding: 4px 7px;
+}
+
+#terminals.is-grid .preview-nav-button {
+  width: 27px;
+  height: 27px;
+}
+
+#terminals.is-grid .preview-address-form {
+  height: 29px;
+}
+
+@keyframes glass-tab-lift {
+  from { transform: rotate(0deg) scale(0.96); opacity: 0.45; }
+  to { transform: rotate(0.8deg) scale(1.035); opacity: 0.97; }
+}
+
+@keyframes glass-breathe {
+  0%, 100% { opacity: 0.4; scale: 0.96; }
+  50% { opacity: 0.56; scale: 1.04; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+
+  body::after,
+  .drag-avatar {
+    animation: none;
+  }
+
+  .term-tab,
+  .session-item {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ---------- Font picker ---------- */
+.font-size-row {
+  position: sticky;
+  top: -7px; /* cover the menu's padding so options scroll under it cleanly */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 9px 9px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid var(--glass-line);
+  background: var(--bg-elevated);
+}
+
+.font-size-label {
+  flex: 1 1 auto;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.font-size-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--glass-line);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--glass-surface) 70%, transparent);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.1s ease;
+}
+
+.font-size-step:hover { background: var(--glass-hover); }
+.font-size-step:active { transform: scale(0.9); }
+.font-size-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.font-size-value {
+  min-width: 2.4ch;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.font-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 9px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.font-option:hover { background: var(--bg-hover); }
+.font-option:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.font-option-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.font-option-name { font-size: 13px; }
+.font-option.is-selected .font-option-name { font-weight: 600; }
+
+.font-option-sample {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

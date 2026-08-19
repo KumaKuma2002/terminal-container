@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Terminal Container</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Terminal font faces for the font picker (fall back to system monos offline) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cutive+Mono:wght@400&family=Martian+Mono:wght@400&family=Space+Mono:wght@400;700&display=swap" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css" />
   <script defer src="../node_modules/@xterm/xterm/lib/xterm.js"></script>
@@ -43,20 +47,36 @@
       </ul>
       <footer class="sidebar-footer">
         <span id="session-count">0 sessions</span>
-        <button id="theme-toggle" class="btn-ghost" title="Choose theme" aria-label="Choose theme" aria-haspopup="menu" aria-expanded="false"></button>
+        <div class="footer-pickers">
+          <button id="font-toggle" class="btn-ghost" title="Choose font" aria-label="Choose font" aria-haspopup="menu" aria-expanded="false"></button>
+          <button id="theme-toggle" class="btn-ghost" title="Choose theme" aria-label="Choose theme" aria-haspopup="menu" aria-expanded="false"></button>
+        </div>
       </footer>
     </aside>
 
     <main id="main">
       <div class="topbar">
+        <div id="term-tabs" class="term-tabs" role="tablist"><!-- renderer injects .term-tab tabs here --></div>
+        <button id="new-tab-btn" class="term-tab-add" title="New terminal" aria-label="New terminal">+</button>
+        <button id="new-preview-btn" class="term-tab-add preview-tab-add" title="New web preview" aria-label="New web preview">
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <circle cx="10" cy="10" r="7"></circle>
+            <path d="M3 10h14M10 3c2 2 3 4.3 3 7s-1 5-3 7c-2-2-3-4.3-3-7s1-5 3-7Z"></path>
+          </svg>
+        </button>
         <span id="active-title">No terminal</span>
         <div class="topbar-actions">
           <button id="layout-toggle" class="btn-ghost" title="Toggle window (grid) mode">▦ Grid</button>
           <button id="kill-active" class="btn-ghost" title="Close terminal">Close</button>
         </div>
       </div>
-      <div id="terminals"><!-- renderer mounts one .term-instance per session here --></div>
-      <div id="empty-state">No terminals yet. Press + to start one.</div>
+      <div id="terminals">
+        <!-- renderer mounts one .term-instance per session here -->
+        <div id="empty-state">
+          <span class="empty-glyph" aria-hidden="true">☕</span>
+          <span class="empty-copy">Nothing brewing yet — press <kbd>⌘T</kbd> or <kbd>+</kbd> to open a terminal.</span>
+        </div>
+      </div>
     </main>
   </div>
 
