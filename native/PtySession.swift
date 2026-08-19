@@ -51,7 +51,19 @@ final class PtySession {
 
         if forkedPid == 0 {
             // Child — become the shell. Only C-ish calls before exec.
+            // A full color/unicode environment so prompts, ls, git, etc.
+            // render exactly like they do in Terminal.app.
             setenv("TERM", "xterm-256color", 1)
+            setenv("COLORTERM", "truecolor", 1)
+            if getenv("LANG") == nil && getenv("LC_ALL") == nil {
+                setenv("LANG", "en_US.UTF-8", 1)
+            }
+            // Launchd/Finder launches miss the Homebrew/local paths an
+            // interactive login would normally have — provide them.
+            let currentPath = getenv("PATH").map { String(cString: $0) } ?? ""
+            if currentPath.range(of: "/opt/homebrew/bin") == nil {
+                setenv("PATH", "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", 1)
+            }
             if !cwd.isEmpty { chdir(cwd) }
             var argv: [UnsafeMutablePointer<CChar>?] = [strdup(shell)]
             argv.append(nil)

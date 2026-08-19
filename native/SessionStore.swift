@@ -12,9 +12,20 @@ final class SessionStore {
     private var flushScheduled = false
     weak var webView: WKWebView?
 
+    // The user's LOGIN shell from the passwd database — NOT $SHELL, which
+    // is whatever environment the app happened to be launched from (e.g. a
+    // plain bash when launched from a script), and would silently swap the
+    // user's colorful zsh setup for a default one.
+    private static let loginShell: String = {
+        if let pw = getpwuid(getuid()) {
+            let shell = String(cString: pw.pointee.pw_shell)
+            if !shell.isEmpty { return shell }
+        }
+        return ProcessInfo.processInfo.environment["SHELL"] ?? "/bin/zsh"
+    }()
+
     func create(opts: [String: Any]) -> [String: Any] {
-        let env = ProcessInfo.processInfo.environment
-        let shell = (opts["shell"] as? String) ?? env["SHELL"] ?? "/bin/zsh"
+        let shell = (opts["shell"] as? String) ?? SessionStore.loginShell
         let cwd = (opts["cwd"] as? String) ?? NSHomeDirectory()
         let cols = (opts["cols"] as? Int) ?? 80
         let rows = (opts["rows"] as? Int) ?? 24
