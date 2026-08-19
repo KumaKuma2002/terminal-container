@@ -59,6 +59,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
     }
 
+    // AppKit resets the standard buttons to default positions on layout
+    // passes — keep pinning them where the HTML expects (24, 22).
+    func windowDidResize(_ notification: Notification) {
+        DispatchQueue.main.async { self.repositionTrafficLights() }
+    }
+
+    func windowDidBecomeKey(_ notification: Notification) {
+        DispatchQueue.main.async { self.repositionTrafficLights() }
+    }
+
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         host?.bridge.store.killAll()
         return .terminateNow

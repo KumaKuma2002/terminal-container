@@ -1,18 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Terminal Container app icon — cozy liquid glass:
+       cream squircle, dark warm glass pane, clay prompt. -->
   <defs>
-    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="20" flood-color="#6b4a3a" flood-opacity="0.18"/>
-    </filter>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#faf4ea"/>
+      <stop offset="1" stop-color="#e9dbca"/>
+    </linearGradient>
+    <linearGradient id="pane" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#352820"/>
+      <stop offset="1" stop-color="#211913"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.26"/>
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.62" cy="0.30" r="0.65">
+      <stop offset="0" stop-color="#e08a63" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#e08a63" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Anthropic-ivory squircle -->
-  <rect x="92" y="92" width="840" height="840" rx="208" fill="#F0EEE6" filter="url(#sh)"/>
+  <!-- squircle background -->
+  <rect x="8" y="8" width="1008" height="1008" rx="228" fill="url(#bg)"/>
 
-  <!-- minimalist terminal prompt: chevron in warm near-black -->
-  <path d="M372 372 L536 512 L372 652"
-        fill="none" stroke="#1A1A17" stroke-width="58"
+  <!-- dark warm glass pane -->
+  <rect x="152" y="204" width="720" height="616" rx="92" fill="url(#pane)"/>
+  <rect x="152" y="204" width="720" height="616" rx="92" fill="url(#glow)"/>
+  <rect x="152" y="204" width="720" height="616" rx="92" fill="url(#sheen)"/>
+  <rect x="153" y="205" width="718" height="614" rx="91" fill="none"
+        stroke="#ffffff" stroke-opacity="0.16" stroke-width="2"/>
+
+  <!-- traffic lights — cozy palette: clay / amber / sage -->
+  <circle cx="238" cy="290" r="17" fill="#d97757"/>
+  <circle cx="296" cy="290" r="17" fill="#caa052"/>
+  <circle cx="354" cy="290" r="17" fill="#8caa6a"/>
+
+  <!-- prompt › _ -->
+  <path d="M 306 416 L 424 512 L 306 608"
+        fill="none" stroke="#d97757" stroke-width="58"
         stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="486" y="484" width="204" height="56" rx="28" fill="#f0e6d8"/>
 
-  <!-- cursor: a single clay accent (Anthropic clay) -->
-  <rect x="566" y="600" width="150" height="52" rx="26" fill="#CC785C"/>
+  <!-- dimmer second line + clay cursor -->
+  <rect x="486" y="614" width="128" height="42" rx="21" fill="#f0e6d8" fill-opacity="0.22"/>
+  <rect x="648" y="614" width="64" height="42" rx="21" fill="#d97757"/>
 </svg>

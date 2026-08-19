@@ -14,7 +14,9 @@ swiftc -swift-version 5 -O \
   -framework AppKit -framework WebKit \
   -o "$APP/Contents/MacOS/TerminalContainer"
 
+mkdir -p "$APP/Contents/Resources"
 cp native/Info.plist "$APP/Contents/Info.plist"
+cp build/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 printf 'APPLTCTN' > "$APP/Contents/PkgInfo"
 codesign --force --sign - "$APP" >/dev/null 2>&1 || true
 

@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Terminal Container</title>
+  <script>
+    // Native (WKWebView) host? Mark <html> before styles apply — the CSS
+    // disables backdrop-filters there (real vibrancy sits behind the page).
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.term) {
+      document.documentElement.classList.add("native-host");
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Terminal font faces for the font picker (fall back to system monos offline) -->

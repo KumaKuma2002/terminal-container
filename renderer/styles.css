@@ -1128,6 +1128,10 @@ body::after {
   background-size: 180px 180px;
 }
 
+/* Clean glass panes: a warm tint, ONE top rim, ONE hairline, ONE soft
+   shadow. No corner beads / sheen bands / stacked rings — layered corner
+   effects kept rendering inconsistently and read as noise under the
+   traffic lights. */
 #sidebar {
   position: relative;
   background:
@@ -1137,11 +1141,9 @@ body::after {
   border-radius: var(--r-card);
   overflow: hidden;
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 34%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 32%, transparent),
     inset 0 0 0 1px color-mix(in srgb, white 7%, transparent),
-    0 26px 66px var(--glass-shadow-deep),
-    0 5px 16px var(--glass-shadow),
-    0 34px 96px color-mix(in srgb, var(--accent) 9%, transparent);
+    0 18px 48px var(--glass-shadow-deep);
   backdrop-filter: blur(32px) saturate(165%);
   -webkit-backdrop-filter: blur(32px) saturate(165%);
 }
@@ -1150,61 +1152,13 @@ body::after {
   position: relative;
   border-radius: var(--r-card);
   overflow: hidden;
-  background:
-    radial-gradient(140% 100% at 112% -22%, color-mix(in srgb, white 6%, transparent), transparent 52%),
-    var(--glass-panel);
+  background: var(--glass-panel);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 30%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
     inset 0 0 0 1px color-mix(in srgb, white 6%, transparent),
-    0 30px 74px var(--glass-shadow-deep),
-    0 6px 18px var(--glass-shadow),
-    0 38px 104px color-mix(in srgb, var(--accent) 8%, transparent);
+    0 20px 52px var(--glass-shadow-deep);
   backdrop-filter: blur(32px) saturate(165%);
   -webkit-backdrop-filter: blur(32px) saturate(165%);
-}
-
-/* Corner beads + a sheen band where light catches the top of the pane.
-   The beads are MIRRORED left/right so both top corners read identically. */
-#sidebar::before,
-#main::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, color-mix(in srgb, white 9%, transparent), transparent 14%),
-    radial-gradient(140px 90px at 14% -10%, color-mix(in srgb, white 15%, transparent), transparent 62%),
-    radial-gradient(140px 90px at 86% -10%, color-mix(in srgb, white 15%, transparent), transparent 62%);
-}
-
-/* The refractive edge: a hairline lens ring that re-blurs whatever crosses
-   the border, over a UNIFORM whisper of cool tint (a chromatic-dispersion
-   hint that is identical on every corner — angle-varying tints made the
-   four corners look mismatched). */
-#sidebar::after,
-#main::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  padding: 2px;
-  background:
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, white 55%, transparent),
-      color-mix(in srgb, white 8%, transparent) 30%,
-      transparent 60%,
-      color-mix(in srgb, white 15%, transparent)
-    ),
-    rgba(150, 180, 255, 0.06);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  backdrop-filter: blur(1px) saturate(180%) brightness(1.05);
-  -webkit-backdrop-filter: blur(1px) saturate(180%) brightness(1.05);
 }
 
 #terminals,
@@ -1368,30 +1322,11 @@ body::after {
   border-color: var(--glass-line);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, white 30%, transparent),
+    inset 0 0 0 1px rgba(150, 180, 255, 0.07),
     0 24px 64px var(--glass-shadow-deep),
     0 4px 14px var(--glass-shadow);
   backdrop-filter: blur(30px) saturate(160%);
   -webkit-backdrop-filter: blur(30px) saturate(160%);
-}
-
-/* Menus get the same refractive edge treatment as the big panes. */
-.theme-menu::after,
-.font-menu::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  padding: 1px;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, white 42%, transparent),
-    transparent 58%
-  );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
 }
 
 /* Each tab is an individual floating glass capsule. */
@@ -1779,4 +1714,16 @@ body::after {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ---------- Native host (WKWebView) ----------
+   The native window provides REAL under-window vibrancy; WebKit
+   backdrop-filters over a transparent WKWebView sample nothing (and can
+   render as dark boxes), so they are disabled — the translucent tints
+   carry the glass look on their own over the system material. */
+.native-host *,
+.native-host *::before,
+.native-host *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
