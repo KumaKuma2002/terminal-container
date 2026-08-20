@@ -19,9 +19,4 @@
   <!-- main stream: a smooth S-wave through the center -->
   <path d="M 232 560 C 372 560, 372 400, 512 400 C 652 400, 652 560, 792 560"
         fill="none" stroke="url(#flow)" stroke-width="96" stroke-linecap="round"/>
-
-  <!-- trailing echo: a lighter, shorter stream following behind -->
-  <path d="M 330 730 C 450 730, 450 616, 570 616"
-        fill="none" stroke="url(#flow)" stroke-width="44"
-        stroke-linecap="round" opacity="0.45"/>
 </svg>
