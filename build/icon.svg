@@ -1,39 +1,18 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-  <!-- Terminal Container app icon — full-bleed cozy dark glass,
-       clay prompt, no light surround. -->
+  <!-- Terminal Container — Apple minimalism:
+       one dark tile, one glyph, one accent. -->
   <defs>
-    <linearGradient id="pane" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#3a2c22"/>
-      <stop offset="1" stop-color="#1e1710"/>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#221b15"/>
+      <stop offset="1" stop-color="#140f0a"/>
     </linearGradient>
-    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.18"/>
-      <stop offset="0.4" stop-color="#ffffff" stop-opacity="0.04"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="0.68" cy="0.22" r="0.7">
-      <stop offset="0" stop-color="#e08a63" stop-opacity="0.30"/>
-      <stop offset="1" stop-color="#e08a63" stop-opacity="0"/>
-    </radialGradient>
   </defs>
 
-  <!-- full-bleed squircle -->
-  <rect x="0" y="0" width="1024" height="1024" rx="232" fill="url(#pane)"/>
-  <rect x="0" y="0" width="1024" height="1024" rx="232" fill="url(#glow)"/>
-  <rect x="0" y="0" width="1024" height="1024" rx="232" fill="url(#sheen)"/>
-
-  <!-- traffic lights — cozy palette: clay / amber / sage -->
-  <circle cx="132" cy="186" r="20" fill="#d97757"/>
-  <circle cx="196" cy="186" r="20" fill="#caa052"/>
-  <circle cx="260" cy="186" r="20" fill="#8caa6a"/>
+  <rect x="0" y="0" width="1024" height="1024" rx="232" fill="url(#tile)"/>
 
   <!-- prompt › _ -->
-  <path d="M 210 420 L 368 552 L 210 684"
-        fill="none" stroke="#d97757" stroke-width="72"
+  <path d="M 320 372 L 536 512 L 320 652"
+        fill="none" stroke="#d97757" stroke-width="80"
         stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="438" y="516" width="256" height="72" rx="36" fill="#f0e6d8"/>
-
-  <!-- dimmer second line + clay cursor -->
-  <rect x="438" y="668" width="150" height="46" rx="23" fill="#f0e6d8" fill-opacity="0.22"/>
-  <rect x="620" y="668" width="74" height="46" rx="23" fill="#d97757"/>
+  <rect x="592" y="480" width="140" height="64" rx="32" fill="#d97757"/>
 </svg>
