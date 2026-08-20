@@ -1104,16 +1104,13 @@ body::after {
   animation: glass-breathe 7s ease-in-out infinite;
 }
 
-/* Two floating glass cards on a frosted mat. The 34px top padding leaves a
-   dedicated transparent strip where the traffic lights live at their
-   DEFAULT system position — no hand-pinning, always aligned (the strip is
-   also the native window's drag area). */
+/* Edge-to-edge glass: the window IS the material. Sidebar and main fill
+   the whole window (no outer mat/border), split by a single hairline. */
 #app {
   position: relative;
   z-index: 1;
-  gap: 10px;
-  padding: 34px 10px 10px;
-  background: color-mix(in srgb, var(--bg) 8%, transparent);
+  gap: 0;
+  padding: 0;
 }
 
 /* Film grain — barely-there noise that makes the material read as glass
@@ -1130,35 +1127,28 @@ body::after {
   background-size: 180px 180px;
 }
 
-/* Clean glass panes: a warm tint, ONE top rim, ONE hairline, ONE soft
-   shadow. No corner beads / sheen bands / stacked rings — layered corner
-   effects kept rendering inconsistently and read as noise under the
-   traffic lights. */
+/* Full-height glass panes: translucent warm tints over the window
+   material, a top rim, and a hairline between them — nothing floating,
+   no outer frame. */
 #sidebar {
   position: relative;
   background:
     radial-gradient(150% 90% at 88% -12%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%),
     var(--glass-panel);
-  border-right: none;
-  border-radius: var(--r-card);
+  border-right: 1px solid var(--glass-line);
+  border-radius: 0;
   overflow: hidden;
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 32%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, white 7%, transparent),
-    0 18px 48px var(--glass-shadow-deep);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 30%, transparent);
   backdrop-filter: blur(32px) saturate(165%);
   -webkit-backdrop-filter: blur(32px) saturate(165%);
 }
 
 #main {
   position: relative;
-  border-radius: var(--r-card);
+  border-radius: 0;
   overflow: hidden;
   background: var(--glass-panel);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, white 6%, transparent),
-    0 20px 52px var(--glass-shadow-deep);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 26%, transparent);
   backdrop-filter: blur(32px) saturate(165%);
   -webkit-backdrop-filter: blur(32px) saturate(165%);
 }
@@ -1173,7 +1163,8 @@ body::after {
 }
 
 .sidebar-header {
-  min-height: 52px;
+  min-height: 60px;
+  padding-top: 36px; /* clear the traffic lights overlaying the pane */
   -webkit-app-region: drag;
 }
 

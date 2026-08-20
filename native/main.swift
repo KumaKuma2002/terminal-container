@@ -82,9 +82,10 @@ final class HostViewController: NSViewController, WKNavigationDelegate {
         bridge.attach(to: webView)
 
         // The HTML drag regions (-webkit-app-region) are Chromium-only; the
-        // 30px transparent strip above the cards (where the traffic lights
-        // live) doubles as the window drag area.
-        let strip = DragStripView(frame: NSRect(x: 0, y: view.bounds.height - 30, width: view.bounds.width, height: 30))
+        // sidebar's empty header zone (above the brand text, beside the
+        // traffic lights) doubles as the native drag area. Keep it off the
+        // main pane so topbar tabs stay clickable.
+        let strip = DragStripView(frame: NSRect(x: 0, y: view.bounds.height - 30, width: 280, height: 30))
         strip.autoresizingMask = [.width, .minYMargin]
         view.addSubview(strip)
 
