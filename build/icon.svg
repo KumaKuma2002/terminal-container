@@ -1,18 +1,27 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-  <!-- Terminal Container — Apple minimalism:
-       one dark tile, one glyph, one accent. -->
+  <!-- Terminal Container — flowing-stream redesign:
+       one warm gradient wave (a stream of sessions) + a lighter
+       trailing echo, on a deep cozy tile. -->
   <defs>
     <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#221b15"/>
       <stop offset="1" stop-color="#140f0a"/>
     </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d97757"/>
+      <stop offset="0.5" stop-color="#e8a06b"/>
+      <stop offset="1" stop-color="#caa052"/>
+    </linearGradient>
   </defs>
 
   <rect x="0" y="0" width="1024" height="1024" rx="232" fill="url(#tile)"/>
 
-  <!-- prompt › _ -->
-  <path d="M 320 372 L 536 512 L 320 652"
-        fill="none" stroke="#d97757" stroke-width="80"
-        stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="592" y="480" width="140" height="64" rx="32" fill="#d97757"/>
+  <!-- main stream: a smooth S-wave through the center -->
+  <path d="M 232 560 C 372 560, 372 400, 512 400 C 652 400, 652 560, 792 560"
+        fill="none" stroke="url(#flow)" stroke-width="96" stroke-linecap="round"/>
+
+  <!-- trailing echo: a lighter, shorter stream following behind -->
+  <path d="M 330 730 C 450 730, 450 616, 570 616"
+        fill="none" stroke="url(#flow)" stroke-width="44"
+        stroke-linecap="round" opacity="0.45"/>
 </svg>
